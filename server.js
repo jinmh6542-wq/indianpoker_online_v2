@@ -1,8 +1,7 @@
 const http=require('http'),fs=require('fs'),path=require('path'),crypto=require('crypto');
 const {WebSocketServer}=require('ws');
-const rooms=new Map();
-const server=http.createServer((req,res)=>{if(req.url!=='/'&&req.url!=='/index.html'){res.writeHead(404);return res.end()}res.setHeader('Content-Type','text/html; charset=utf-8');fs.createReadStream(path.join(__dirname,'public','index.html')).pipe(res)});
-const wss=new WebSocketServer({server,path:'/ws'});
+const rooms=new')).pipe(res)});
+const server=http.createServer((req,res)=>{if(req.url!=='/'&&req.url!=='/index.html'){res.writeHead(404);return res.end()}fs.readFile(path.join(__dirname,'public','IndianPoker_Online_V2-1.html'),(err,data)=>{if(err){res.writeHead(500);return res.end('Game file not found')}res.writeHead(200,{'Content-Type':'text/html; charset=utf-8'});res.end(data)})});
 const send=(ws,obj)=>{if(ws?.readyState===1)ws.send(JSON.stringify(obj))};
 const err=(ws,message)=>send(ws,{type:'error',message});
 function lobby(r){r.players.forEach((p,i)=>send(p.ws,{type:'lobby',code:r.code,seat:i,host:i===0,players:r.players.map(x=>x.name)}))}
